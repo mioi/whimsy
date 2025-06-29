@@ -1,5 +1,9 @@
 # Whimsy
 
+[![Tests](https://github.com/mioi/whimsy/actions/workflows/test.yml/badge.svg)](https://github.com/mioi/whimsy/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/mioi/whimsy/branch/main/graph/badge.svg)](https://codecov.io/gh/mioi/whimsy)
+[![Go Version](https://img.shields.io/badge/go-1.21-blue.svg)](https://golang.org)
+
 A Go library that generates random memorable names using plants, animals, and colors. Perfect for infrastructure naming.
 
 ## Installation
