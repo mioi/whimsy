@@ -6,6 +6,8 @@
 
 A Go library that generates random memorable names using plants, animals, and colors. Perfect for infrastructure naming.
 
+Note: For the terraform provider, please check out [`terraform-provider-whimsy`](https://github.com/mioi/terraform-provider-whimsy)!
+
 ## Installation
 
 ```bash
