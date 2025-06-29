@@ -291,3 +291,105 @@ func BenchmarkRandomName(b *testing.B) {
 		}
 	}
 }
+
+// Test error cases for randomFromSlice
+func TestRandomFromSliceEmpty(t *testing.T) {
+	_, err := randomFromSlice([]string{})
+	if err == nil {
+		t.Error("randomFromSlice with empty slice should return error")
+	}
+	if err.Error() != "slice is empty" {
+		t.Errorf("Expected 'slice is empty' error, got: %v", err)
+	}
+}
+
+// Test getAllWords function
+func TestGetAllWords(t *testing.T) {
+	allWords := getAllWords()
+
+	if len(allWords) == 0 {
+		t.Error("getAllWords() should return non-empty slice")
+	}
+
+	// Should contain all plants, animals, and colors
+	expectedCount := len(Plants()) + len(Animals()) + len(Colors())
+	if len(allWords) != expectedCount {
+		t.Errorf("getAllWords() should return %d words, got %d", expectedCount, len(allWords))
+	}
+
+	// Verify that all categories are represented in getAllWords
+	allWordsMap := make(map[string]bool)
+	for _, word := range allWords {
+		allWordsMap[word] = true
+	}
+
+	// Check that all plants are included
+	for _, plant := range Plants() {
+		if !allWordsMap[plant] {
+			t.Errorf("getAllWords() missing plant: %s", plant)
+		}
+	}
+
+	// Check that all animals are included
+	for _, animal := range Animals() {
+		if !allWordsMap[animal] {
+			t.Errorf("getAllWords() missing animal: %s", animal)
+		}
+	}
+
+	// Check that all colors are included
+	for _, color := range Colors() {
+		if !allWordsMap[color] {
+			t.Errorf("getAllWords() missing color: %s", color)
+		}
+	}
+}
+
+// Test RandomName with edge case where we might run out of unique words
+func TestRandomNameLargeCount(t *testing.T) {
+	// This should work fine since we have plenty of words
+	maxParts := len(Categories())
+	name, err := RandomName(maxParts)
+	if err != nil {
+		t.Errorf("RandomName(%d) should not fail with current word counts: %v", maxParts, err)
+	}
+
+	parts := strings.Split(name, "-")
+	if len(parts) != maxParts {
+		t.Errorf("RandomName(%d) should return %d parts, got %d", maxParts, maxParts, len(parts))
+	}
+}
+
+// Test getAllCategories function
+func TestGetAllCategories(t *testing.T) {
+	categories := getAllCategories()
+
+	if len(categories) == 0 {
+		t.Error("getAllCategories() should return non-empty slice")
+	}
+
+	// Should have exactly 3 categories
+	if len(categories) != 3 {
+		t.Errorf("getAllCategories() should return 3 categories, got %d", len(categories))
+	}
+
+	// Check category names and structure
+	expectedNames := map[string]bool{"plants": false, "animals": false, "colors": false}
+
+	for _, cat := range categories {
+		if _, exists := expectedNames[cat.Name]; exists {
+			expectedNames[cat.Name] = true
+			if len(cat.Words) == 0 {
+				t.Errorf("Category %s should have words", cat.Name)
+			}
+		} else {
+			t.Errorf("Unexpected category name: %s", cat.Name)
+		}
+	}
+
+	for name, found := range expectedNames {
+		if !found {
+			t.Errorf("Expected category %s not found", name)
+		}
+	}
+}
